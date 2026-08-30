@@ -1,7 +1,10 @@
-const BASE = `${import.meta.env.VITE_API_URL}/api`;
+const BASE = "/api";
 
 async function handle(res) {
-  if (!res.ok) throw new Error(`Request failed: ${res.status}`);
+  if (!res.ok) {
+    const body = await res.text().catch(() => "");
+    throw new Error(`Request failed: ${res.status} ${body}`);
+  }
   return res.json();
 }
 
