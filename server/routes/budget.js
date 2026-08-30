@@ -5,8 +5,9 @@ const router = express.Router();
 
 router.get("/", async (req, res) => {
   try {
-    let budget = await Budget.findOne();
-    if (!budget) budget = await Budget.create({ amount: 15000 });
+    let budget = await Budget.findOne({ userId: req.userId });
+    if (!budget)
+      budget = await Budget.create({ userId: req.userId, amount: 15000 });
     res.json(budget.amount);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -16,9 +17,9 @@ router.get("/", async (req, res) => {
 router.put("/", async (req, res) => {
   try {
     const { amount } = req.body;
-    let budget = await Budget.findOne();
+    let budget = await Budget.findOne({ userId: req.userId });
     if (!budget) {
-      budget = await Budget.create({ amount });
+      budget = await Budget.create({ userId: req.userId, amount });
     } else {
       budget.amount = amount;
       await budget.save();
