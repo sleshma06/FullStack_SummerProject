@@ -1,0 +1,107 @@
+:root {
+  /* ---- palette -------------------------------------------------- */
+  --ink: #211E1A;              /* near-black warm charcoal, primary text */
+  --ink-soft: #4A4640;         /* secondary text on light */
+  --charcoal: #211E1A;         /* dark surface */
+  --charcoal-raised: #2B2723;  /* dark surface, one step up */
+  --charcoal-line: #3B362F;    /* hairlines on dark */
+
+  --ivory: #FBF7EF;            /* main light background */
+  --cream: #F4EDE1;            /* secondary light surface */
+  --parchment: #EFE6D6;        /* tertiary light surface / hover */
+  --beige-line: #E2D5BF;       /* hairlines on light */
+  --taupe: #9C8F7C;            /* muted / placeholder text */
+
+  --olive: #4B5A3E;            /* primary accent — deep forest/olive */
+  --olive-deep: #38452E;       /* olive, pressed/hover */
+  --olive-tint: #E4E9D9;       /* pale olive wash for backgrounds */
+
+  --gold: #B6913F;             /* champagne / gold accent */
+  --gold-bright: #D2AC5C;      /* gold for dark surfaces */
+  --gold-tint: #F3E7C9;        /* pale gold wash */
+
+  --terracotta: #AD6B45;       /* secondary accent, warm highlight */
+  --terracotta-tint: #F1DFCF;
+
+  --rust: #A24A3B;             /* reserved for real alerts/destructive */
+  --rust-tint: #F2DAD3;
+
+  --white: #FFFFFF;
+
+  /* ---- semantic ---------------------------------------------------- */
+  --bg: var(--ivory);
+  --surface: var(--white);
+  --surface-muted: var(--cream);
+  --text: var(--ink);
+  --text-muted: var(--ink-soft);
+  --text-faint: var(--taupe);
+  --border: var(--beige-line);
+  --accent: var(--olive);
+  --accent-strong: var(--olive-deep);
+
+  /* ---- type ---------------------------------------------------------- */
+  --font-display: 'Fraunces', 'Iowan Old Style', ui-serif, Georgia, serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  /* ---- spacing scale (4px base) --------------------------------------- */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 32px;
+  --space-8: 40px;
+  --space-9: 56px;
+  --space-10: 72px;
+  --space-11: 96px;
+
+  /* ---- radii ----------------------------------------------------------- */
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-xl: 32px;
+  --radius-full: 999px;
+
+  /* ---- shadows (warm, soft — never cold grey) -------------------------- */
+  --shadow-sm: 0 1px 2px rgba(33, 30, 26, 0.06), 0 1px 1px rgba(33, 30, 26, 0.04);
+  --shadow-md: 0 8px 24px -8px rgba(33, 30, 26, 0.16), 0 2px 6px rgba(33, 30, 26, 0.06);
+  --shadow-lg: 0 24px 56px -16px rgba(33, 30, 26, 0.28), 0 6px 16px -4px rgba(33, 30, 26, 0.10);
+  --shadow-gold: 0 10px 28px -10px rgba(182, 145, 63, 0.45);
+
+  /* ---- motion ------------------------------------------------------------ */
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --fast: 140ms;
+  --base: 220ms;
+  --slow: 420ms;
+
+  /* ---- layout -------------------------------------------------------------- */
+  --sidebar-w: 264px;
+  --content-max: 1180px;
+  --bottom-nav-h: 68px;
+}
+
+/* ---- dark theme (toggled from Profile > Dark theme) ---------------------
+   Everything in this app is built on the semantic tokens above (--bg,
+   --surface, --text, --border…), so re-pointing just those here is enough
+   to flip the whole content area. The sidebar / landing hero / auth panel /
+   insight banner intentionally stay on the raw --charcoal + --ivory pair —
+   they're the app's "always-dark" chrome in both themes. */
+[data-theme='dark'] {
+  --bg: var(--charcoal);
+  --surface: var(--charcoal-raised);
+  --surface-muted: #322D27;
+  --text: var(--ivory);
+  --text-muted: rgba(251, 247, 239, 0.72);
+  --text-faint: rgba(251, 247, 239, 0.48);
+  --border: var(--charcoal-line);
+
+  --cream: #2B2723;
+  --parchment: #3A352E;
+  --beige-line: var(--charcoal-line);
+
+  --olive-tint: rgba(75, 90, 62, 0.32);
+  --gold-tint: rgba(182, 145, 63, 0.22);
+  --terracotta-tint: rgba(173, 107, 69, 0.24);
+  --rust-tint: rgba(162, 74, 59, 0.26);
+}
