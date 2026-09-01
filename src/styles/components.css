@@ -259,6 +259,17 @@
   padding-top: var(--space-4);
   border-top: 1px solid var(--charcoal-line);
 }
+.sidebar-footer .sidebar-link {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: var(--ivory);
+  text-align: left;
+}
+.sidebar-footer .sidebar-link:hover {
+  color: var(--gold-bright);
+  background: rgba(182, 145, 63, 0.16);
+}
 
 .mobile-nav {
   display: none;

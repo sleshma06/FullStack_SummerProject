@@ -1,4 +1,6 @@
-const BASE = `${import.meta.env.VITE_API_URL}/api/auth`;
+// Defaults to same-origin /api. Set VITE_API_URL for separate API deployments.
+const API_ORIGIN = (import.meta.env.VITE_API_URL || "").replace(/\/$/, "");
+const BASE = `${API_ORIGIN}/api/auth`;
 
 async function handle(res) {
   const data = await res.json().catch(() => ({}));
@@ -25,5 +27,13 @@ export function login(email, password) {
 export function getMe(token) {
   return fetch(`${BASE}/me`, {
     headers: { Authorization: `Bearer ${token}` },
+  }).then(handle);
+}
+
+export function updateProfile(token, data) {
+  return fetch(`${BASE}/me`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+    body: JSON.stringify(data),
   }).then(handle);
 }

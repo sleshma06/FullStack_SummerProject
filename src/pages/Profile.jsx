@@ -1,8 +1,9 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { LogOut, Moon, Sun } from 'lucide-react'
 import { useExpenses } from '../context/ExpenseContext'
 import { useToast } from '../context/ToastContext'
+import { useAuth } from '../context/AuthContext'
 import { formatCurrency } from '../utils/format'
 
 const CURRENCIES = [
@@ -16,12 +17,18 @@ export default function Profile() {
   const navigate = useNavigate()
   const { showToast } = useToast()
   const { budget } = useExpenses()
+  const { user, updateProfile, logout } = useAuth()
 
-  const [name, setName] = useState('Alex Sharma')
-  const [email, setEmail] = useState('alex@university.edu')
+  const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
   const [currency, setCurrency] = useState('NPR')
   const [saving, setSaving] = useState(false)
   const [dark, setDark] = useState(() => document.documentElement.dataset.theme === 'dark')
+
+  useEffect(() => {
+    setName(user?.name || '')
+    setEmail(user?.email || '')
+  }, [user])
 
   function toggleTheme() {
     const next = !dark
@@ -34,21 +41,33 @@ export default function Profile() {
     showToast('Currency preference saved.', 'success')
   }
 
-  function handleSaveProfile(e) {
+  async function handleSaveProfile(e) {
     e.preventDefault()
+    const trimmedName = name.trim()
+    if (!trimmedName) {
+      showToast('Please enter your name.', 'error')
+      return
+    }
+    const trimmedEmail = email.trim().toLowerCase()
+    if (!/^\S+@\S+\.\S+$/.test(trimmedEmail)) {
+      showToast('Please enter a valid email address.', 'error')
+      return
+    }
     setSaving(true)
-    // Frontend prototype — no backend call yet, just a friendly delay so the
-    // "Saving…" state actually reads as real. Swap for a PUT /api/profile
-    // once the account system exists.
-    setTimeout(() => {
-      setSaving(false)
+    try {
+      await updateProfile({ name: trimmedName, email: trimmedEmail })
       showToast('Profile updated.', 'success')
-    }, 450)
+    } catch (err) {
+      showToast(err.message || "Couldn't update your profile - try again.", 'error')
+    } finally {
+      setSaving(false)
+    }
   }
 
   function handleLogout() {
+    logout()
     showToast('Logged out. See you soon! 👋', 'info')
-    navigate('/')
+    navigate('/login', { replace: true })
   }
 
   const initial = name.trim().charAt(0).toUpperCase() || 'A'

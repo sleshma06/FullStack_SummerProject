@@ -45,8 +45,15 @@ export function AuthProvider({ children }) {
     setUser(null)
   }, [])
 
+  const updateProfile = useCallback(async (data) => {
+    if (!token) throw new Error('You must be logged in to update your profile.')
+    const updatedUser = await authService.updateProfile(token, data)
+    setUser(updatedUser)
+    return updatedUser
+  }, [token])
+
   return (
-    <AuthContext.Provider value={{ token, user, loading, login, register, logout }}>
+    <AuthContext.Provider value={{ token, user, loading, login, register, logout, updateProfile }}>
       {children}
     </AuthContext.Provider>
   )

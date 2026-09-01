@@ -1,4 +1,6 @@
-const BASE = `${import.meta.env.VITE_API_URL}/api`;
+// Defaults to same-origin /api instead of generating "undefined/api".
+const API_ORIGIN = (import.meta.env.VITE_API_URL || "").replace(/\/$/, "");
+const BASE = `${API_ORIGIN}/api`;
 
 function authHeaders() {
   const token = localStorage.getItem("token");

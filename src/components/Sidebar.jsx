@@ -1,5 +1,6 @@
 import { NavLink, useNavigate } from 'react-router-dom'
 import { LayoutDashboard, Receipt, PiggyBank, User, LogOut, Wallet } from 'lucide-react'
+import { useAuth } from '../context/AuthContext'
 
 const NAV_ITEMS = [
   { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -10,6 +11,12 @@ const NAV_ITEMS = [
 
 export default function Sidebar() {
   const navigate = useNavigate()
+  const { logout } = useAuth()
+
+  function handleLogout() {
+    logout()
+    navigate('/login', { replace: true })
+  }
 
   return (
     <aside className="sidebar">
@@ -30,7 +37,7 @@ export default function Sidebar() {
       </nav>
 
       <div className="sidebar-footer">
-        <button type="button" className="sidebar-link" onClick={() => navigate('/')}>
+        <button type="button" className="sidebar-link" onClick={handleLogout}>
           <LogOut />
           Log out
         </button>

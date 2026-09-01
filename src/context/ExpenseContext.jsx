@@ -9,11 +9,13 @@ import {
 } from '../services/expenseService'
 import { CATEGORIES } from '../utils/categories'
 import { useToast } from './ToastContext'
+import { useAuth } from './AuthContext'
 
 const ExpenseContext = createContext(null)
 
 export function ExpenseProvider({ children }) {
   const { showToast } = useToast()
+  const { token, loading: authLoading } = useAuth()
   const [expenses, setExpenses] = useState([])
   const [budget, setBudgetState] = useState(0)
   const [loading, setLoading] = useState(true)
@@ -21,6 +23,18 @@ export function ExpenseProvider({ children }) {
 
   useEffect(() => {
     let cancelled = false
+    if (authLoading) return () => { cancelled = true }
+
+    // This provider mounts before login, so defer protected API calls until the
+    // token exists and reload when login changes it.
+    if (!token) {
+      setExpenses([])
+      setBudgetState(0)
+      setError(null)
+      setLoading(false)
+      return () => { cancelled = true }
+    }
+
     setLoading(true)
     Promise.all([getExpenses(), getBudget()])
       .then(([expenseList, budgetValue]) => {
@@ -38,7 +52,7 @@ export function ExpenseProvider({ children }) {
     return () => {
       cancelled = true
     }
-  }, [])
+  }, [token, authLoading])
 
   const addExpense = useCallback(
     async (data) => {
