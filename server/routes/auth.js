@@ -86,4 +86,25 @@ router.get("/me", requireAuth, async (req, res) => {
   }
 });
 
+router.put("/me", requireAuth, async (req, res) => {
+  try {
+    const name = typeof req.body.name === "string" ? req.body.name.trim() : "";
+    if (!name) return res.status(400).json({ error: "Name is required" });
+
+    const email = typeof req.body.email === "string" ? req.body.email.trim().toLowerCase() : "";
+    if (!email) return res.status(400).json({ error: "Email is required" });
+    if (!/^\S+@\S+\.\S+$/.test(email)) {
+      return res.status(400).json({ error: "Enter a valid email address" });
+    }
+
+    const user = await User.findByIdAndUpdate(req.userId, { name, email }, { new: true, runValidators: true })
+      .select("-passwordHash");
+    if (!user) return res.status(404).json({ error: "User not found" });
+    res.json({ id: user._id, name: user.name, email: user.email });
+  } catch (err) {
+    if (err?.code === 11000) return res.status(409).json({ error: "An account with this email already exists" });
+    res.status(500).json({ error: err.message });
+  }
+});
+
 export default router;
